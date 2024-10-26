@@ -1,23 +1,23 @@
-from fastapi import FastAPI, Depends, status
+from typing import Annotated
 
-from dependencies import get_token_header, get_query_token
-from interval import admin
-from routers import items, users
-
+import uvicorn
+from fastapi import FastAPI, Path
+from pydantic import EmailStr, BaseModel
 
 app = FastAPI()
 
-app.include_router(users.router)
-app.include_router(items.router)
-app.include_router(
-    admin.router,
-    prefix="/admin",
-    tags=["admin"],
-    dependencies=[Depends(get_token_header)],
-    responses={status.HTTP_418_IM_A_TEAPOT: {"description": "I'm teapot"}},
-)
+
+class CreateUser(BaseModel):
+    email: EmailStr
 
 
-@app.get("/")
-async def root():
-    return {"message": "Hello Bigger Applications!"}
+@app.post("/users/{user_id}/")
+async def create_user(user_id: Annotated[int, Path(ge=0, le=1_000_000)]): # валидация через аннотацию типов
+    return {
+        "message": "success",
+        "user_id": user_id,
+    }
+
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", reload=True)
