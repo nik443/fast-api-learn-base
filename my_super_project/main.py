@@ -4,19 +4,12 @@ import uvicorn
 from fastapi import FastAPI, Path
 from pydantic import EmailStr, BaseModel
 
+from items_views import router as items_router
+from users.views import router as user_router
+
 app = FastAPI()
-
-
-class CreateUser(BaseModel):
-    email: EmailStr
-
-
-@app.post("/users/{user_id}/")
-async def create_user(user_id: Annotated[int, Path(ge=0, le=1_000_000)]): # валидация через аннотацию типов
-    return {
-        "message": "success",
-        "user_id": user_id,
-    }
+app.include_router(items_router)
+app.include_router(user_router)
 
 
 if __name__ == "__main__":
