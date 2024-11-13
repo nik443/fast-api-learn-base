@@ -23,4 +23,4 @@ class DatabaseHelper:
             await session.close()
 
 
-db_helper = DatabaseHelper(url=setting.db_url, echo=setting.db_echo)
+db_helper = DatabaseHelper(url=setting.db.url, echo=setting.db.echo)

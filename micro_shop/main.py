@@ -3,19 +3,19 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from pydantic import BaseModel, EmailStr
 import uvicorn
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from micro_shop.core.config import setting
 from core.models import Base
 from item_views import router as items_router
-from micro_shop.core.models import db_helper
+from micro_shop.core.models import db_helper, User
 from users.views import router as users_router
 from api_v1 import router as router_v1
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    async with db_helper.engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+
     yield
 
 
@@ -45,6 +45,15 @@ def add(a: int, b: int):
         "b": b,
         "result": a + b,
     }
+
+
+@app.post("/zalupa/")
+async def create_user(session: AsyncSession, username: str) -> User:
+    user = User(username=username)
+    session.add(user)
+    await session.commit()
+    print(f"user: {user}")
+    return user
 
 
 if __name__ == '__main__':
