@@ -56,7 +56,7 @@ async def create_posts(
     posts_titles: list[str],
 ) -> list[Post]:
     posts = [Post(title=title, user_id=user_id) for title in posts_titles]
-    session.add_all(posts)
+    session.add_all(posts) # add_all - если нужно добавить несколько записей в бд в виде list
     await session.commit()
     print(posts)
     return posts
@@ -88,6 +88,7 @@ async def get_users_with_posts_and_profiles(session: AsyncSession):
 
 
 async def get_profiles_with_users_and_users_with_posts(session: AsyncSession):
+    # join нужен для работы where, т.к. запрос сложный
     stmt = (
         select(Profile)
         .join(Profile.user)
