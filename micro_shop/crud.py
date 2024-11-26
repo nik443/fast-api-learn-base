@@ -45,7 +45,7 @@ async def create_user_profile(
 
 
 async def show_users_with_profiles(session: AsyncSession) -> list[User]:
-    stmt = select(User).options(joinedload(User.profile)).order_by(User.id) # для получения связанных моделей, где тип связи - один-к-одному: используем selectinload
+    stmt = select(User).options(joinedload(User.profile)).order_by(User.id) # для получения связанных моделей, где тип связи - один-к-одному: используем joinedload
     users = await session.scalars(stmt) # scalars - ожидаем получить коллекцию элементов
     for user in users:
         print(user)

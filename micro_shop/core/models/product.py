@@ -6,7 +6,6 @@ from micro_shop.core.models.base import Base
 
 if TYPE_CHECKING:
     from micro_shop.core.models.order_product_association import OrderProductAssociation
-    from micro_shop.core.models.order import Order
 
 
 class Product(Base):
