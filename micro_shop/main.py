@@ -47,14 +47,5 @@ def add(a: int, b: int):
     }
 
 
-@app.post("/zalupa/")
-async def create_user(session: AsyncSession, username: str) -> User:
-    user = User(username=username)
-    session.add(user)
-    await session.commit()
-    print(f"user: {user}")
-    return user
-
-
 if __name__ == '__main__':
     uvicorn.run("main:app", reload=True)
